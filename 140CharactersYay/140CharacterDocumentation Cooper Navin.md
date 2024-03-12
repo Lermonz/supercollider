@@ -110,3 +110,88 @@ b = Buffer.read(s, "/Users/cooper/e.wav");
 ^ 139 characters (a bit of wiggle room to mess with numbers while under the limit)
 
 assigning an unused trigger used less characters than typing out startPos lmao
+
+# Fuck
+
+i had a thought hours after submitting this that it won't be able to play on any other device because i didn't include the sample into my github directory to abuse the short path to get there, so i went back into the instructions to see if it was necessary to play on anyone's computer and i finally saw the link in the .md instructions file and it's blowing my mind i feel so fuckign stupid
+
+i am restarting the assignment pretty much.
+
+i spent a while just analyzing how the first example in the tweet scd page works. (it especially took me a while to understand how it got some variation in its rhythm)
+
+had the idea to change the frequency based on an LFPulse to make an interval out of just one channel like how a lot of tracker music does. with my current knowledge from class and the minimal reading i did on the wiki page provided in the instructions i got this
+```
+play{LFPulse.ar(LFPulse.kr(20,1,0.5,57,220),1,0.25,0.5)!2}
+```
+which is not great. using a pulse to affect the frequency got kinda the right affect but it could only do 2 notes in the channel, which isn't enough to sound good with this effect all on its own. it reminded me of a telephone, which i then attempted to lean into even more by having the mul be affected by a pulse too, so it'll turn on and off like a landline ringing
+```
+play{LFPulse.ar(LFPulse.kr(20,1,0.5,57,220),1,0.25,LFPulse.kr(1)*0.5)!2}
+```
+but i dont really want that!!!
+
+i want movement in either a chord change or a ryhthm (or both if i can fit it)
+
+i tried using what i already knew to do this. by making a variable that is itself a pulse, then multiplying that be the correct ratios within what actually gets played, to allow for a chord change to a rhythm! it actually did work but it still sounds like a telephone
+
+```
+play{f=LFPulse.kr(1,1/3,1/3,110,220);LFPulse.ar(LFPulse.kr(13,1,1/3,f*0.19,f),1,0.25,1/3)!2}
+```
+
+i want it to sound musical!!! not just like a noise.
+
+attempted using an LFNoise0 for f to get randomness in the same effect but that sounded worse imo (it does sound kinda neat but not enough to replace this idea)
+```
+play{f=LFNoise0.kr(1,110,220);LFPulse.ar(LFPulse.kr(20,1,0.5,f*0.19,f),1,0.25,0.5)!2}
+```
+(actually going back to this later, an LFNoise one with this sounds incredibly funny)
+
+later decided that the most important thing is to have more than just 2 notes playing, so i scowered the depths of the SuperCollider Browse UGens page to see if there was anything that could, in a very small amount of text, select between a small set of integers that is not random and not too limited in scope.
+
+the best one i found was Stepper, which i decided to cycle through super fast to do that same arpeggio effect i love but now with as many options as i want!!
+
+```
+play{LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,220,440,55),1,1/3,0.2)!2}
+```
+hey wtf why is it going down (it is doing what i expect generally, but it is drifting downward in frequency overtime before shooting back up to the original)
+
+dont know why that happens, but apparently using smaller numbers inside the stepper then multiplying it outside makes it work properly.
+```
+play{LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*55,1,1/3,0.2)!2}
+```
+^ same thing but now good
+
+but i wanna bring back the variable thing cuz that was cool movement
+```
+play{f=LFPulse.kr(1/2,1/3,1/3,77,220);LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*(f/4),1,1/3,0.2)!2}
+```
+now this is gaming! and only 103 characters? i can add some more stuff with this. 
+
+i wanna be different from the first example in the instructions link tho, so i'll add a bassline instead of a percussion thing and make the frequency based on the same variable to actually use it as a variable lol
+
+```
+play{f=LFPulse.kr(1/2,1/3,1/3,77,220);LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*(f/4),1,1/3,0.2)+(LFCub.ar(f/4,1,0.3))!2}
+```
+yeah that's pretty good, but i still want *more*
+
+i actually do wanna add a percussion thing just so i can understand it more.
+
+i went back to analyzing the example for a while, and figured out how it works and added my own variation of it
+```
+play{f=LFPulse.kr(1/2,1/3,1/3,77,220);LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*(f/4),1,1/3,0.2)+(LFCub.ar(f/4,1,0.3))+(WhiteNoise.ar(LFPulse.kr(6,0,LFPulse.kr(2,1/4)/2+0.1)/8))!2}
+```
+ah shit
+
+this is 184 characters tho
+
+gotta cut it down (but i dont wanna (but you gotta))
+
+i'd like to keep the noise in some way, but it requires a lot of text in order to be interesting, and i can't just cut the bass cuz that's only 22 characters i'd cut, which isn't enough. i can't cut the variable stuff that makes the chord change cuz that's the only real original thing i did that makes it sound neat.
+
+maybe... i do cut the percussion and just find a way to make the bass more interesting to make up for it.
+
+ugggghhhh i got so many more ideas on how to make the bass more interesting, like maybe turning into a doubling of bass and kick, and using that idea to vary how loud multiply of its mul is which is already affected by a pulse to blah blah blah 
+
+i did not have as much wiggle room as i thought, so i have this, which is fine enough considering its 139 characters
+```
+play{f=LFPulse.kr(1/2,1/3,1/3,77,220);LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*(f/4),1,1/3,0.2)+(LFCub.ar(f/4,1,LFPulse.kr(3)*0.4))!2}
+```

@@ -1,0 +1,1 @@
+play{f=LFPulse.kr(1/2,1/3,1/3,77,220);LFPulse.ar(Stepper.kr(LFPulse.kr(42),0,4,8,1)*(f/4),1,1/3,0.2)+(LFCub.ar(f/4,1,LFPulse.kr(3)*0.4))!2}
